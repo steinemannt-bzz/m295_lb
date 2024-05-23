@@ -100,12 +100,12 @@ public class Animal {
         this.habitat = habitat;
     }
 
-    public Boolean getEndangered() {
+    public Boolean getIsEndangered() {
         return isEndangered;
     }
 
-    public void setEndangered(Boolean endangered) {
-        isEndangered = endangered;
+    public void setIsEndangered(Boolean isEndangered) {
+        this.isEndangered = isEndangered;
     }
 
     public Keeper getKeeper() {

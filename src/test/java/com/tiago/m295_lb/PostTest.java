@@ -17,6 +17,29 @@ public class PostTest {
     private final TestConfig testConfig = new TestConfig();
 
     @Test
+    public void testCreateTables() throws IOException {
+        HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/createTables");
+        testConfig.addBasicAuthHeaderPost(request, TestConfig.ADMIN_USERNAME, TestConfig.ADMIN_PASSWORD);
+
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+        assertEquals(HttpStatus.SC_OK, statusCode);
+        assertEquals("Tables created successfully", testConfig.extractResponseBody(httpResponse));
+    }
+
+    @Test
+    public void testCreateTablesWithoutPermission() throws IOException {
+        HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/createTables");
+
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+        assertEquals(HttpStatus.SC_UNAUTHORIZED, statusCode);
+        assertEquals("You cannot access this resource", testConfig.extractResponseBody(httpResponse));
+    }
+
+    @Test
     public void testCreateAnimal() throws IOException {
         String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
 
@@ -88,7 +111,7 @@ public class PostTest {
 
     @Test
     public void testCreateAnimalWithFutureAttributeAcquireDate() throws IOException {
-        String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2099-05-01\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
+        String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2099-05-05\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
 
         HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/create");
         testConfig.addBasicAuthHeaderPost(request, TestConfig.ADMIN_USERNAME, TestConfig.ADMIN_PASSWORD);
@@ -104,7 +127,7 @@ public class PostTest {
 
     @Test
     public void testCreateAnimalWithFaultyAttributeAcquireDate() throws IOException {
-        String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2023-12.30\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
+        String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2024-05.05\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
 
         HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/create");
         testConfig.addBasicAuthHeaderPost(request, TestConfig.ADMIN_USERNAME, TestConfig.ADMIN_PASSWORD);
@@ -118,8 +141,23 @@ public class PostTest {
     }
 
     @Test
+    public void testCreateAnimalWithoutPermission() throws IOException {
+        String requestBody = "{\"name\":\"Leon\",\"species\":\"Lion\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"200\",\"habitat\":\"rain forest\",\"isEndangered\":true,\"keeperId\":1}";
+
+        HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/create");
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(new StringEntity(requestBody));
+
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+        assertEquals(HttpStatus.SC_UNAUTHORIZED, statusCode);
+        assertEquals("You cannot access this resource", testConfig.extractResponseBody(httpResponse));
+    }
+
+    @Test
     public void testCreateMultipleAnimals() throws IOException {
-        String requestBody = "[" + "{\"name\":\"Simba\",\"species\":\"Lion\",\"dateAcquired\":\"2024-01-15\",\"weight\":\"150\",\"habitat\":\"Savanna\",\"isEndangered\":true,\"keeperId\":2}," + "{\"name\":\"Dumbo\",\"species\":\"Elephant\",\"dateAcquired\":\"2024-02-20\",\"weight\":\"300\",\"habitat\":\"Forest\",\"isEndangered\":false,\"keeperId\":3}" + "]";
+        String requestBody = "[" + "{\"name\":\"Simba\",\"species\":\"Lion\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"150\",\"habitat\":\"Savanna\",\"isEndangered\":true,\"keeperId\":2}," + "{\"name\":\"Dumbo\",\"species\":\"Elephant\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"300\",\"habitat\":\"Forest\",\"isEndangered\":false,\"keeperId\":3}" + "]";
 
         HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/createMultiple");
         testConfig.addBasicAuthHeaderPost(request, TestConfig.ADMIN_USERNAME, TestConfig.ADMIN_PASSWORD);
@@ -130,5 +168,20 @@ public class PostTest {
         int statusCode = httpResponse.getStatusLine().getStatusCode();
 
         assertEquals(HttpStatus.SC_CREATED, statusCode);
+    }
+
+    @Test
+    public void testCreateMultipleAnimalsWithoutPermission() throws IOException {
+        String requestBody = "[" + "{\"name\":\"Simba\",\"species\":\"Lion\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"150\",\"habitat\":\"Savanna\",\"isEndangered\":true,\"keeperId\":2}," + "{\"name\":\"Dumbo\",\"species\":\"Elephant\",\"dateAcquired\":\"2024-05-05\",\"weight\":\"300\",\"habitat\":\"Forest\",\"isEndangered\":false,\"keeperId\":3}" + "]";
+
+        HttpPost request = new HttpPost(TestConfig.SERVICE_URL + "/createMultiple");
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(new StringEntity(requestBody, StandardCharsets.UTF_8));
+
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+        assertEquals(HttpStatus.SC_UNAUTHORIZED, statusCode);
+        assertEquals("You cannot access this resource", testConfig.extractResponseBody(httpResponse));
     }
 }

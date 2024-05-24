@@ -20,7 +20,7 @@ Mit meiner Anwendung kann ich die Datenbank über die Endpoints Lesen, Schreiben
 
 ### Screenshot der Testdurchführung
 
-- ![Screenshot](Link-zum-Bild)
+- ![Screenshot](src/media/Tests.png)
 
 ## Validierungsregeln
 

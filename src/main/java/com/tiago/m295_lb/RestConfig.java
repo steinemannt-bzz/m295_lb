@@ -1,5 +1,7 @@
 package com.tiago.m295_lb;
 
+import com.tiago.m295_lb.exceptions.BadRequestExceptionHandler;
+import com.tiago.m295_lb.exceptions.InternalServerErrorExceptionHandler;
 import com.tiago.m295_lb.exceptions.NotFoundExceptionHandler;
 import com.tiago.m295_lb.exceptions.ConstraintViolationExceptionHandler;
 import com.tiago.m295_lb.services.AnimalService;
@@ -16,6 +18,8 @@ public class RestConfig extends Application {
         return new HashSet<>(Arrays.asList(
                 AnimalService.class,
                 NotFoundExceptionHandler.class,
-                ConstraintViolationExceptionHandler.class));
+                ConstraintViolationExceptionHandler.class,
+                BadRequestExceptionHandler.class,
+                InternalServerErrorExceptionHandler.class));
     }
 }

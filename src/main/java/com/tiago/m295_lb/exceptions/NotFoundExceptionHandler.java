@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 @Provider
 public class NotFoundExceptionHandler implements ExceptionMapper<NotFoundException> {
+
     private final Logger logger = LogManager.getLogger(NotFoundExceptionHandler.class);
 
     @Override

@@ -12,11 +12,11 @@ Mit meiner Anwendung kann ich die Datenbank über die Endpoints Lesen, Schreiben
 
 ### Datenbankdiagramm
 
-- ![Datenbankdiagramm](../../media/Zoo_DatabaseDiagram.png)
+- ![Datenbankdiagramm](src/media/Zoo_DatabaseDiagram.png)
 
 ### Klassendiagramm
 
-- ![Klassendiagramm](../../media/Zoo_ClassDiagram.png)
+- ![Klassendiagramm](src/media/Zoo_ClassDiagram.png)
 
 ### Screenshot der Testdurchführung
 

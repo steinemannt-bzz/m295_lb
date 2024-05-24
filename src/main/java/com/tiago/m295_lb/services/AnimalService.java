@@ -151,7 +151,7 @@ public class AnimalService {
         }
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN"})
     @POST
     @Path("/createTables")
     @Produces(MediaType.TEXT_PLAIN)
@@ -166,7 +166,7 @@ public class AnimalService {
         }
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN", "EMPLOYEE"})
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -184,7 +184,7 @@ public class AnimalService {
         }
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN", "EMPLOYEE"})
     @POST
     @Path("/createMultiple")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -206,7 +206,7 @@ public class AnimalService {
         }
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN", "EMPLOYEE"})
     @PUT
     @Path("/update/{animalId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -224,7 +224,7 @@ public class AnimalService {
             animalRepository.save(existingAnimal);
             logger.info("Updated animal with Id: {}", animalId);
             return Response.status(Response.Status.OK).entity(existingAnimal).build();
-        } catch (ConstraintViolationException e) {
+        } catch (NotFoundException | ConstraintViolationException e) {
             throw e;
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
@@ -244,6 +244,8 @@ public class AnimalService {
             } else {
                 throw new NotFoundException("Animal with Id: " + animalId + " not found");
             }
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }
@@ -264,6 +266,8 @@ public class AnimalService {
                 logger.info("No animals found");
                 return Response.status(Response.Status.NO_CONTENT).entity("No animals found").build();
             }
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }

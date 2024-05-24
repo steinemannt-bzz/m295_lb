@@ -4,6 +4,7 @@ import com.tiago.m295_lb.exceptions.BadRequestExceptionHandler;
 import com.tiago.m295_lb.exceptions.InternalServerErrorExceptionHandler;
 import com.tiago.m295_lb.exceptions.NotFoundExceptionHandler;
 import com.tiago.m295_lb.exceptions.ConstraintViolationExceptionHandler;
+import com.tiago.m295_lb.security.AuthenticationFilter;
 import com.tiago.m295_lb.services.AnimalService;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class RestConfig extends Application {
     public Set<Class<?>> getClasses() {
         return new HashSet<>(Arrays.asList(
+                AuthenticationFilter.class,
                 AnimalService.class,
                 NotFoundExceptionHandler.class,
                 ConstraintViolationExceptionHandler.class,

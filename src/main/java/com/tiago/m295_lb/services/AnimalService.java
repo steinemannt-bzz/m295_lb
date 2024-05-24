@@ -4,6 +4,8 @@ import com.tiago.m295_lb.models.Animal;
 import com.tiago.m295_lb.models.Keeper;
 import com.tiago.m295_lb.repositories.IAnimalRepository;
 import com.tiago.m295_lb.repositories.IKeeperRepository;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -39,6 +41,7 @@ public class AnimalService {
         this.dataSource = dataSource;
     }
 
+    @PermitAll
     @GET
     @Path("/get/{animalId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,11 +54,14 @@ public class AnimalService {
             } else {
                 throw new NotFoundException("Animal with Id: " + animalId + " not found");
             }
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    @PermitAll
     @GET
     @Path("/exists/{animalId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +79,7 @@ public class AnimalService {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
@@ -91,6 +98,7 @@ public class AnimalService {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/filter/date/{date}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,6 +118,7 @@ public class AnimalService {
         }
     }
 
+    @PermitAll
     @GET
     @Path("/filter/text/{text}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -128,7 +137,7 @@ public class AnimalService {
         }
     }
 
-
+    @PermitAll
     @GET
     @Path("/count")
     @Produces(MediaType.APPLICATION_JSON)
@@ -142,6 +151,7 @@ public class AnimalService {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/createTables")
     @Produces(MediaType.TEXT_PLAIN)
@@ -152,11 +162,11 @@ public class AnimalService {
             logger.info("Tables created successfully");
             return Response.status(Response.Status.OK).entity("Tables created successfully").build();
         } catch (Exception e) {
-            logger.error("Error creating tables: ", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error creating tables: " + e.getMessage()).build();
+            throw new InternalServerErrorException(e.getMessage());
         }
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -174,6 +184,7 @@ public class AnimalService {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/createMultiple")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -195,6 +206,7 @@ public class AnimalService {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @PUT
     @Path("/update/{animalId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -219,6 +231,7 @@ public class AnimalService {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/delete/{animalId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -236,6 +249,7 @@ public class AnimalService {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/deleteAll")
     @Produces(MediaType.APPLICATION_JSON)
